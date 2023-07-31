@@ -30,7 +30,7 @@
 </template>
 <script setup lang="ts">
 const emit = defineEmits(["getDrinkDetailsByName"]);
-import { reactive, computed } from "vue";
+import { reactive } from "vue";
 
 const state = reactive({
   itemId: null,
@@ -49,9 +49,6 @@ const props = withDefaults(
 
 function handleClickEmit(drinkName: object) {
   emit("getDrinkDetailsByName", drinkName);
-}
-function showDetailsBtn(id: any) {
-  state.itemId = id;
 }
 </script>
 <style lang="scss" scoped>
