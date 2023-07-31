@@ -97,17 +97,6 @@ async function getAllDrinkCategories() {
     await useCustomFetch<any>("/api/json/v1/1/list.php?c=list", {
       method: "GET",
     });
-  const { message, statusCode } = useError(error);
-  if (error) {
-    if (statusCode === 400) {
-      // Handle 400 error.
-      console.log(message);
-    }
-    if (statusCode === 500) {
-      // Handle 500 error.
-      console.log(message);
-    }
-  }
   state.categories = drinksCategories.value.drinks;
   getAllDrinks();
 }
