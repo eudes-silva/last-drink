@@ -2,7 +2,7 @@
   <CoreSnackbar
     v-if="Object.keys(state.feedbackMsg).length"
     :kind="state.feedbackMsg.kind"
-    :snackbarActive="state.feedbackMsg.activateMsgComponent"
+    :snackbarActive="!!state.feedbackMsg.activateMsgComponent"
     :text="state.feedbackMsg.message"
     :timeout="5000"
   ></CoreSnackbar>
@@ -89,7 +89,6 @@
 </template>
 <script setup lang="ts">
 import { reactive, onMounted } from "vue";
-const emit = defineEmits(["feedbackMsg"]);
 
 const state = reactive({
   dialog: false,

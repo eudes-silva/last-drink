@@ -20,7 +20,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { reactive, watch } from "vue";
+import { computed, reactive, watch } from "vue";
 const emit = defineEmits(["searchInput"]);
 
 const props = withDefaults(
@@ -28,8 +28,8 @@ const props = withDefaults(
     baseColor?: string;
     label: string;
     disabled?: boolean;
-    kind?: string;
-    density?: string;
+    kind?: "primary" | "secondary" | "tertiary";
+    density?: "compact" | "comfortable" | "default";
     rounded?: string;
     propClass?: string;
   }>(),
@@ -37,8 +37,8 @@ const props = withDefaults(
     baseColor: "",
     label: "",
     disabled: false,
-    kind: "primary",
-    density: "",
+    kind: "secondary",
+    density: "compact",
     rounded: "",
     propClass: "",
   }
@@ -48,9 +48,9 @@ const variant = computed(
   () =>
     ((
       {
-        primary: "elevated",
+        primary: "solo",
         secondary: "outlined",
-        tertiary: "flat",
+        tertiary: "plain",
       } as const
     )[props.kind])
 );

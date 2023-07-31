@@ -18,6 +18,7 @@
   </v-select>
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
 const emit = defineEmits(["displayBySelected", "clearSelected"]);
 
 const props = withDefaults(
@@ -26,8 +27,8 @@ const props = withDefaults(
     label?: string;
     categories: Array<object>;
     disabled?: boolean;
-    kind?: string;
-    density?: string;
+    kind?: "primary" | "secondary" | "tertiary";
+    density?: "compact" | "comfortable" | "default";
     rounded?: string;
     propClass?: string;
     baseColor?: string;
@@ -40,7 +41,7 @@ const props = withDefaults(
     categories: () => [],
     disabled: false,
     kind: "primary",
-    density: "",
+    density: "compact",
     rounded: "",
     propClass: "",
     baseColor: "",
@@ -53,9 +54,9 @@ const variant = computed(
   () =>
     ((
       {
-        primary: "elevated",
+        primary: "solo",
         secondary: "outlined",
-        tertiary: "flat",
+        tertiary: "plain",
       } as const
     )[props.kind])
 );

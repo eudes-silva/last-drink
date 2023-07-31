@@ -2,23 +2,22 @@
   <v-snackbar :color="color" v-model="state.snackbarActive" :timeout="timeout">
     {{ text }}
     <template v-slot:actions>
-      <v-btn :variant="variant" @click="state.snackbarActive = false">
-        Fechar
-      </v-btn>
+      <v-btn @click="state.snackbarActive = false"> Fechar </v-btn>
     </template>
   </v-snackbar>
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
 const props = withDefaults(
   defineProps<{
-    kind: "success" | "warning" | "error";
+    kind?: "success" | "warning" | "error";
     snackbarActive: boolean;
     text: string;
     timeout?: number;
     variant?: string;
   }>(),
   {
-    kind: "",
+    kind: "success",
     snackbarActive: true,
     text: "",
     timeout: 2000,
@@ -35,6 +34,7 @@ const color = computed(
       } as const
     )[props.kind])
 );
+
 const state = reactive({
   snackbarActive: props.snackbarActive,
 });
