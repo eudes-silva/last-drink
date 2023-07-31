@@ -30,11 +30,6 @@
 </template>
 <script setup lang="ts">
 const emit = defineEmits(["getDrinkDetailsByName"]);
-import { reactive } from "vue";
-
-const state = reactive({
-  itemId: null,
-});
 
 const props = withDefaults(
   defineProps<{
