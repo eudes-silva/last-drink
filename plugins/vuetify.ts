@@ -13,8 +13,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         myCustomTheme: {
           dark: false,
           colors: {
-            primary: "#9C27B0",
-            secondary: "#333333",
+            primary: "#9a8979",
+            secondary: "#3b3f1d",
+            tertiary: "#cfaa9a",
             error: "#FF5252",
             info: "#2196F3",
             success: "#4CAF50",
@@ -22,6 +23,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             grey: "#9E9E9E",
             white: "#FFFFFF",
             black: "#010101",
+            mainbg: "#d7d6d0",
           },
         },
       },

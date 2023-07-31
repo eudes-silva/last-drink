@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th
-          class="text-primary text-left"
+          class="text-secondary text-left"
           v-for="header in headers"
           :key="header.id"
         >
@@ -15,14 +15,14 @@
       <tr v-for="item in props.items" :key="item.idDrink">
         <td
           @click="header.value === 'strDrink' ? handleClickEmit(item) : ''"
-          class="text-primary"
+          class="text-secondary"
           v-for="header in props.headers"
         >
           {{ item[header.value]
           }}<v-icon
             class="ml-2 mb-1 details-icon"
             v-if="header.value === 'strDrink'"
-            color="secondary"
+            color="tertiary"
             small
             >mdi-eye-outline</v-icon
           >

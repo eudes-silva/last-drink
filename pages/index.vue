@@ -1,6 +1,6 @@
 <template>
   <v-row
-    class="d-flex justify-space-between align-center bg-white elevation-5 px-4 py-0 mt-12 mx-10 rounded-xl"
+    class="bg-tertiary d-flex justify-space-between align-center bg-white elevation-5 px-4 py-0 mt-12 mx-10 rounded-xl"
   >
     <v-col cols="12" sm="4" md="3" lg="2" class="pt-4">
       <CoreSelect
@@ -8,9 +8,9 @@
         kind="secondary"
         item-title="strCategory"
         item-value="strCategory"
-        prop-class="text-primary"
-        color="primary"
-        base-color="primary"
+        prop-class="text-secondary"
+        color="secondary"
+        base-color="secondary"
         label="Categorias"
         rounded="lg"
         :categories="state.categories"
@@ -20,6 +20,14 @@
     </v-col>
     <v-col class="py-0 text-right" cols="12" sm="6">
       <CoreSearch
+        density="compact"
+        kind="secondary"
+        item-title="strCategory"
+        item-value="strCategory"
+        prop-class="text-secondary"
+        base-color="secondary"
+        label="Buscar por nome da bebida"
+        rounded="lg"
         :key="state.selectedCategory"
         @search-input="searchDrinkByName"
       ></CoreSearch>
