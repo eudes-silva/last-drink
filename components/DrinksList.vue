@@ -13,13 +13,10 @@
     </thead>
     <tbody>
       <tr v-for="item in props.items" :key="item.idDrink">
-        <td
-          @click="header.value === 'strDrink' ? handleClickEmit(item) : ''"
-          class="text-secondary"
-          v-for="header in props.headers"
-        >
+        <td class="text-secondary" v-for="header in props.headers">
           {{ item[header.value]
           }}<v-icon
+            @click="handleClickEmit(item)"
             class="ml-2 mb-1 details-icon"
             v-if="header.value === 'strDrink'"
             color="tertiary"
