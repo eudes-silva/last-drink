@@ -23,6 +23,7 @@ export function useCustomFetch<T>(
     },
 
     onResponseError(_ctx) {
+      return _ctx;
       // throw new myBusinessError()
     },
   };

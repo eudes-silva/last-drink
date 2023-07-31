@@ -1,4 +1,12 @@
 <template>
+  <CoreSnackbar
+    v-if="Object.keys(state.feedbackMsg).length"
+    :kind="state.feedbackMsg.kind"
+    :snackbarActive="state.feedbackMsg.activateMsgComponent"
+    :text="state.feedbackMsg.message"
+    :timeout="5000"
+  ></CoreSnackbar>
+
   <v-row
     class="bg-tertiary d-flex justify-space-between align-center bg-white elevation-5 px-4 py-0 mt-12 mx-10 rounded-xl"
   >
@@ -81,6 +89,7 @@
 </template>
 <script setup lang="ts">
 import { reactive, onMounted } from "vue";
+const emit = defineEmits(["feedbackMsg"]);
 
 const state = reactive({
   dialog: false,
@@ -94,6 +103,7 @@ const state = reactive({
   drinkImg: "",
   drinkTitle: "",
   drinkDescription: "",
+  feedbackMsg: {},
 });
 
 onMounted(() => {
@@ -104,9 +114,28 @@ async function getAllDrinkCategories() {
   const { data: drinksCategories, error }: { data: any; error?: any } =
     await useCustomFetch<any>("/api/json/v1/1/list.php?c=list", {
       method: "GET",
+      onResponseError({ response }) {
+        if (response.status === 404) {
+          state.feedbackMsg = {
+            kind: "error",
+            message: "Erro! Não encontrado.",
+            activateMsgComponent: true,
+          };
+        }
+        if (response.status === 500) {
+          state.feedbackMsg = {
+            kind: "error",
+            message: "Erro interno de servidor.",
+            activateMsgComponent: true,
+          };
+        }
+      },
     });
-  state.categories = drinksCategories.value.drinks;
-  getAllDrinks();
+
+  if (!error.value) {
+    state.categories = drinksCategories.value.drinks;
+    getAllDrinks();
+  }
 }
 
 function getAllDrinks() {
@@ -121,15 +150,35 @@ async function getBySelectedDrinkCategory(selectedCategoryName: string) {
   state.drinks = [];
   const { data: getDrinksByCategory, error } = await useCustomFetch<any>(
     `/api/json/v1/1/filter.php?c=${selectedCategoryName}`,
-    { method: "GET" }
+    {
+      method: "GET",
+      onResponseError({ response }) {
+        if (response.status === 404) {
+          state.feedbackMsg = {
+            kind: "error",
+            message: "Erro! Não encontrado.",
+            activateMsgComponent: true,
+          };
+        }
+        if (response.status === 500) {
+          state.feedbackMsg = {
+            kind: "error",
+            message: "Erro interno de servidor.",
+            activateMsgComponent: true,
+          };
+        }
+      },
+    }
   );
 
-  state.drinks.push(
-    ...getDrinksByCategory.value.drinks.map((item: any) => {
-      return { ...item, drinkCategory: selectedCategoryName };
-    })
-  );
-  sortDrinksByName(state.drinks);
+  if (!error.value) {
+    state.drinks.push(
+      ...getDrinksByCategory.value.drinks.map((item: any) => {
+        return { ...item, drinkCategory: selectedCategoryName };
+      })
+    );
+    sortDrinksByName(state.drinks);
+  }
 }
 
 function clearSelectedCategory() {
@@ -165,13 +214,33 @@ async function getDrinkDetailsByName(drinkItem: any) {
   state.dialog = false;
   const { data: drink, error } = await useCustomFetch<any>(
     `/api/json/v1/1/search.php?s=${drinkItem.strDrink}`,
-    { method: "GET" }
+    {
+      method: "GET",
+      onResponseError({ response }) {
+        if (response.status === 404) {
+          state.feedbackMsg = {
+            kind: "error",
+            message: "Erro! Não encontrado.",
+            activateMsgComponent: true,
+          };
+        }
+        if (response.status === 500) {
+          state.feedbackMsg = {
+            kind: "error",
+            message: "Erro interno de servidor.",
+            activateMsgComponent: true,
+          };
+        }
+      },
+    }
   );
-  const { strInstructions: drinkInstructions } = drink.value.drinks[0];
-  state.drinkImg = drinkItem.strDrinkThumb;
-  state.drinkTitle = drinkItem.strDrink;
-  state.drinkDescription = drinkInstructions;
-  state.dialog =
-    !!state.drinkImg && !!state.drinkTitle && !!state.drinkDescription;
+  if (!error.value) {
+    const { strInstructions: drinkInstructions } = drink.value.drinks[0];
+    state.drinkImg = drinkItem.strDrinkThumb;
+    state.drinkTitle = drinkItem.strDrink;
+    state.drinkDescription = drinkInstructions;
+    state.dialog =
+      !!state.drinkImg && !!state.drinkTitle && !!state.drinkDescription;
+  }
 }
 </script>
