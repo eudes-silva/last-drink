@@ -3,12 +3,13 @@
     <v-card-text class="px-0">
       <v-text-field
         v-model="state.searchInput"
-        class="text-primary"
-        rounded="lg"
-        base-color="primary"
-        density="compact"
-        variant="outlined"
-        label="Buscar por nome da bebida"
+        :disabled="disabled"
+        :class="propClass"
+        :rounded="rounded"
+        :base-color="baseColor"
+        :density="density"
+        :variant="variant"
+        :label="label"
         append-inner-icon="mdi-magnify"
         single-line
         hide-details
@@ -21,6 +22,38 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
 const emit = defineEmits(["searchInput"]);
+
+const props = withDefaults(
+  defineProps<{
+    baseColor?: string;
+    label: string;
+    disabled?: boolean;
+    kind?: string;
+    density?: string;
+    rounded?: string;
+    propClass?: string;
+  }>(),
+  {
+    baseColor: "",
+    label: "",
+    disabled: false,
+    kind: "primary",
+    density: "",
+    rounded: "",
+    propClass: "",
+  }
+);
+
+const variant = computed(
+  () =>
+    ((
+      {
+        primary: "elevated",
+        secondary: "outlined",
+        tertiary: "flat",
+      } as const
+    )[props.kind])
+);
 
 const state = reactive({
   searchInput: "",
