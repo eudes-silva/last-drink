@@ -21,9 +21,7 @@ export function useCustomFetch<T>(
     onResponse(_ctx) {
       // _ctx.response._data = new myBusinessResponse(_ctx.response._data)
     },
-
     onResponseError(_ctx) {
-      return _ctx;
       // throw new myBusinessError()
     },
   };

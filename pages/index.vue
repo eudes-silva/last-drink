@@ -8,7 +8,7 @@
   ></CoreSnackbar>
 
   <v-row
-    class="bg-tertiary d-flex justify-space-between align-center bg-white elevation-5 px-4 py-0 mt-12 mx-10 rounded-xl"
+    class="bg-tertiary d-flex justify-space-between align-center bg-white elevation-5 px-4 pt-2 pb-0 pt-sm-0 mt-12 mx-2 mx-sm-10 rounded-xl"
   >
     <v-col cols="12" sm="4" md="3" lg="2" class="pt-4">
       <CoreSelect
@@ -26,7 +26,7 @@
         @clear-selected="clearSelectedCategory"
       />
     </v-col>
-    <v-col class="py-0 text-right" cols="12" sm="6">
+    <v-col class="py-0 text-right" cols="12" sm="6" md="4" lg="3" xl="2">
       <CoreSearch
         density="compact"
         kind="secondary"
@@ -43,8 +43,9 @@
   </v-row>
   <div
     v-if="state.drinks.length"
-    class="bg-white my-12 elevation-5 mx-10 py-6 px-8 rounded-xl"
+    class="bg-white my-12 elevation-5 mx-2 mx-sm-10 py-6 px-8 rounded-xl"
   >
+    {{ state.headers }}
     <DrinksList
       :headers="state.headers"
       :items="state.drinks"
@@ -60,16 +61,19 @@
       >
         <template #cover>
           <v-img
-            width="400px"
-            min-height="100%"
+            :width="400"
+            aspect-ratio="1/1"
             cover
-            :src="state.drinkImg"
-          ></v-img>
+            :lazy-src="state.card.drinkImg"
+            :src="state.card.drinkImg"
+            lazy-load
+          >
+          </v-img>
         </template>
         <template #content>
-          <h3 class="text-center py-3 px-4">{{ state.drinkTitle }}</h3>
+          <h3 class="text-center py-3 px-4">{{ state.card.drinkTitle }}</h3>
           <p class="px-4 pt-0 pb-5 text-center font-weight-light">
-            {{ state.drinkDescription }}
+            {{ state.card.drinkDescription }}
           </p>
         </template>
         <template #actions>
@@ -90,56 +94,127 @@
 <script setup lang="ts">
 import { reactive, onMounted } from "vue";
 
+interface FeedbackMsg {
+  kind: "success" | "warning" | "error";
+  activateMsgComponent: boolean;
+  message: string;
+}
+
+interface Card {
+  drinkImg: string;
+  drinkTitle: string;
+  drinkDescription: string;
+}
+
+interface Category {
+  strCategory: string;
+}
+
+interface Header {
+  id: string;
+  name: string;
+  value: string;
+}
+
+interface Drink {
+  idDrink: string;
+  strDrink: string;
+  strCategory: string;
+  strDrinkThumb: string;
+  drinkCategory: string;
+}
+
 const state = reactive({
-  dialog: false,
-  categories: [] as Array<object>,
-  selectedCategory: "",
-  headers: [
-    { name: "Nome da bebida", value: "strDrink" },
-    { name: "Categoria", value: "drinkCategory" },
-  ],
-  drinks: [] as Array<object>,
-  drinkImg: "",
-  drinkTitle: "",
-  drinkDescription: "",
-  feedbackMsg: {},
+  dialog: false as boolean,
+  categories: [] as Category[],
+  selectedCategory: "" as string,
+  headers: [] as Header[],
+  drinks: [] as Drink[],
+  drinksByCategory: {} as Record<string, never>,
+  card: {} as Card,
+  feedbackMsg: {} as FeedbackMsg,
 });
 
 onMounted(() => {
   getAllDrinkCategories();
 });
 
-async function getAllDrinkCategories() {
-  const { data: drinksCategories, error }: { data: any; error?: any } =
-    await useCustomFetch<any>("/api/json/v1/1/list.php?c=list", {
-      method: "GET",
-      onResponseError({ response }) {
-        if (response.status === 404) {
-          state.feedbackMsg = {
-            kind: "error",
-            message: "Erro! Não encontrado.",
-            activateMsgComponent: true,
-          };
-        }
-        if (response.status === 500) {
-          state.feedbackMsg = {
-            kind: "error",
-            message: "Erro interno de servidor.",
-            activateMsgComponent: true,
-          };
-        }
-      },
-    });
+function handleResponseError(error: { status: number }) {
+  if (error.status === 400) {
+    const errorMsg: FeedbackMsg = {
+      kind: "error",
+      message: "Erro! Solicitação inválida.",
+      activateMsgComponent: true,
+    };
+    state.feedbackMsg = errorMsg;
+  }
+  if (error.status === 500) {
+    const errorMsg: FeedbackMsg = {
+      kind: "error",
+      message: "Erro interno de servidor.",
+      activateMsgComponent: true,
+    };
+    state.feedbackMsg = errorMsg;
+  }
+}
 
-  if (!error.value) {
-    state.categories = drinksCategories.value.drinks;
+async function getAllDrinkCategories() {
+  const response = await useCustomFetch<{
+    drinks: Array<Category>;
+    error: object;
+  }>("/api/json/v1/1/list.php?c=list", {
+    method: "GET",
+    onResponseError({ response }) {
+      handleResponseError(response);
+    },
+  });
+
+  if (!response.error.value && response.data.value) {
+    state.categories = response.data.value.drinks;
     getAllDrinks();
   }
 }
 
 function getAllDrinks() {
-  state.categories.forEach(async (category: any) => {
-    getBySelectedDrinkCategory(category.strCategory);
+  state.categories.forEach(async (category: Category) => {
+    state.drinks = [];
+    const response = await useCustomFetch<{
+      drinks: Array<Drink>;
+      error: object;
+    }>(`/api/json/v1/1/filter.php?c=${category.strCategory}`, {
+      method: "GET",
+      onResponseError({ response }) {
+        handleResponseError(response);
+      },
+    });
+
+    if (!response.error.value && response.data.value) {
+      state.headers = [
+        { id: "1", name: "Nome da bebida", value: "strDrink" },
+        { id: "2", name: "Categoria", value: "drinkCategory" },
+      ];
+
+      Object.assign(state.drinksByCategory, {
+        [category.strCategory]: [
+          ...response.data.value.drinks?.map((item) => {
+            return { ...item, drinkCategory: category.strCategory };
+          }),
+        ],
+      });
+      state.drinks.push(
+        ...response.data.value?.drinks.map((item: Drink) => {
+          console.log(item);
+
+          return {
+            ...item,
+            drinkCategory: category.strCategory,
+            idDrink: item.idDrink,
+            strDrinkThumb: item.strDrinkThumb,
+          };
+        })
+      );
+      sortDrinksByName(state.drinks as Array<Drink>);
+    }
   });
   state.selectedCategory = "";
 }
@@ -147,37 +222,7 @@ function getAllDrinks() {
 async function getBySelectedDrinkCategory(selectedCategoryName: string) {
   state.selectedCategory = selectedCategoryName;
   state.drinks = [];
-  const { data: getDrinksByCategory, error } = await useCustomFetch<any>(
-    `/api/json/v1/1/filter.php?c=${selectedCategoryName}`,
-    {
-      method: "GET",
-      onResponseError({ response }) {
-        if (response.status === 404) {
-          state.feedbackMsg = {
-            kind: "error",
-            message: "Erro! Não encontrado.",
-            activateMsgComponent: true,
-          };
-        }
-        if (response.status === 500) {
-          state.feedbackMsg = {
-            kind: "error",
-            message: "Erro interno de servidor.",
-            activateMsgComponent: true,
-          };
-        }
-      },
-    }
-  );
-
-  if (!error.value) {
-    state.drinks.push(
-      ...getDrinksByCategory.value.drinks.map((item: any) => {
-        return { ...item, drinkCategory: selectedCategoryName };
-      })
-    );
-    sortDrinksByName(state.drinks);
-  }
+  state.drinks = state.drinksByCategory[selectedCategoryName];
 }
 
 function clearSelectedCategory() {
@@ -185,9 +230,11 @@ function clearSelectedCategory() {
   getAllDrinkCategories();
 }
 
-function sortDrinksByName(drinks: Array<object>) {
+function sortDrinksByName(drinks: Array<Drink>) {
   return [
-    ...drinks.sort((a: any, b: any) => a.strDrink.localeCompare(b.strDrink)),
+    ...drinks.sort((drinkItem, nextDrinkItem) =>
+      drinkItem.strDrink.localeCompare(nextDrinkItem.strDrink)
+    ),
   ];
 }
 
@@ -211,35 +258,26 @@ async function searchDrinkByName(searchState: {
 
 async function getDrinkDetailsByName(drinkItem: any) {
   state.dialog = false;
-  const { data: drink, error } = await useCustomFetch<any>(
-    `/api/json/v1/1/search.php?s=${drinkItem.strDrink}`,
-    {
-      method: "GET",
-      onResponseError({ response }) {
-        if (response.status === 404) {
-          state.feedbackMsg = {
-            kind: "error",
-            message: "Erro! Não encontrado.",
-            activateMsgComponent: true,
-          };
-        }
-        if (response.status === 500) {
-          state.feedbackMsg = {
-            kind: "error",
-            message: "Erro interno de servidor.",
-            activateMsgComponent: true,
-          };
-        }
-      },
-    }
-  );
-  if (!error.value) {
-    const { strInstructions: drinkInstructions } = drink.value.drinks[0];
-    state.drinkImg = drinkItem.strDrinkThumb;
-    state.drinkTitle = drinkItem.strDrink;
-    state.drinkDescription = drinkInstructions;
+  const response = await useCustomFetch<{
+    drinks: Array<{ strInstructions: string }>;
+    error: object;
+  }>(`/api/json/v1/1/lookup.php?i=${drinkItem.idDrink}`, {
+    method: "GET",
+    onResponseError({ response }) {
+      handleResponseError(response);
+    },
+  });
+  if (!response.error.value && response.data.value) {
+    const cardContent: Card = {
+      drinkImg: `${drinkItem.strDrinkThumb}/preview`,
+      drinkTitle: drinkItem.strDrink,
+      drinkDescription: response.data.value?.drinks[0].strInstructions,
+    };
+    state.card = cardContent;
     state.dialog =
-      !!state.drinkImg && !!state.drinkTitle && !!state.drinkDescription;
+      !!cardContent.drinkImg ||
+      !!cardContent.drinkTitle ||
+      !!cardContent.drinkDescription;
   }
 }
 </script>

@@ -2,15 +2,17 @@
   <div class="text-center h-screen error-container">
     <div>
       <v-icon size="x-large" color="warning">mdi-alert</v-icon>
-      <h1>{{ error.statusCode }}</h1>
-      <p>{{ error.message }}</p>
-      <v-btn
+      <h1>{{ error?.statusCode }}</h1>
+      <p>{{ error?.message }}</p>
+      <CoreBtn
+        rounded="normal"
+        kind="secondary"
         color="primary"
+        label="Voltar para a página inicial"
         size="small"
         class="mt-2 text-lowercase"
         @click="handleError"
-        >Voltar para a página inicial</v-btn
-      >
+      ></CoreBtn>
     </div>
   </div>
 </template>
