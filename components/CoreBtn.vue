@@ -30,13 +30,6 @@ const props = withDefaults(
   }>(),
   {
     kind: "primary",
-    label: "",
-    color: "",
-    rounded: "",
-    size: "",
-    propClass: "",
-    prependIcon: "",
-    appendIco: "",
   }
 );
 const variant = computed(

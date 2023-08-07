@@ -36,17 +36,10 @@ const props = withDefaults(
     itemValue: string;
   }>(),
   {
-    color: "",
-    label: "",
     categories: () => [],
     disabled: false,
     kind: "primary",
     density: "compact",
-    rounded: "",
-    propClass: "",
-    baseColor: "",
-    itemTitle: "",
-    itemValue: "",
   }
 );
 

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ml-auto elevation-0 rounded-xl" color="white" max-width="400">
+  <v-card class="ml-auto elevation-0 rounded-xl" color="white">
     <v-card-text class="px-0">
       <v-text-field
         v-model="state.searchInput"
@@ -34,13 +34,9 @@ const props = withDefaults(
     propClass?: string;
   }>(),
   {
-    baseColor: "",
-    label: "",
     disabled: false,
     kind: "secondary",
     density: "compact",
-    rounded: "",
-    propClass: "",
   }
 );
 

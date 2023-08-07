@@ -12,8 +12,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in props.items" :key="item.idDrink">
-        <td class="text-secondary" v-for="header in props.headers">
+      <tr v-for="item in items" :key="item.idDrink">
+        <td class="text-no-wrap text-secondary" v-for="header in headers">
           {{ item[header.value]
           }}<v-icon
             @click="handleClickEmit(item)"
@@ -31,10 +31,23 @@
 <script setup lang="ts">
 const emit = defineEmits(["getDrinkDetailsByName"]);
 
+interface Header {
+  id: string;
+  name: string;
+  value: string;
+}
+
+interface Item {
+  idDrink: string;
+  [strDrink: string]: string;
+  drinkCategory: string;
+  strDrinkThumb: string;
+}
+
 const props = withDefaults(
   defineProps<{
-    headers?: Array<any>;
-    items?: Array<any>;
+    headers?: Array<Header>;
+    items?: Array<Item>;
   }>(),
   {
     headers: () => [],
@@ -42,8 +55,8 @@ const props = withDefaults(
   }
 );
 
-function handleClickEmit(drinkName: object) {
-  emit("getDrinkDetailsByName", drinkName);
+function handleClickEmit(drinkItem: object) {
+  emit("getDrinkDetailsByName", drinkItem);
 }
 </script>
 <style lang="scss" scoped>

@@ -19,7 +19,6 @@ const props = withDefaults(
   {
     kind: "success",
     snackbarActive: true,
-    text: "",
     timeout: 2000,
     variant: "text",
   }

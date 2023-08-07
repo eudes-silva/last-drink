@@ -38,7 +38,6 @@ const props = withDefaults(
     disabled: false,
     verticalCardWidth: "400",
     horizontalCardWidth: "652",
-    propsClass: "",
   }
 );
 
