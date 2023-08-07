@@ -45,7 +45,6 @@
     v-if="state.drinks.length"
     class="bg-white my-12 elevation-5 mx-2 mx-sm-10 py-6 px-8 rounded-xl"
   >
-    {{ state.headers }}
     <DrinksList
       :headers="state.headers"
       :items="state.drinks"
