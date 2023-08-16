@@ -57,7 +57,8 @@
       <CoreCard kind="primary" props-class="rounded-lg bg-white elevation-5">
         <template #cover>
           <v-img
-            :width="400"
+            width="400"
+            height="100%"
             cover
             :lazy-src="state.card.drinkImg"
             :src="state.card.drinkImg"
