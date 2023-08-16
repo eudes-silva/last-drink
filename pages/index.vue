@@ -12,6 +12,7 @@
   >
     <v-col cols="12" sm="4" md="3" lg="2" class="pt-4">
       <CoreSelect
+        :key="state.resetSelectComponent"
         density="compact"
         kind="secondary"
         item-title="strCategory"
@@ -53,15 +54,10 @@
   </div>
   <CoreModal :dialog="state.dialog" :key="+state.dialog">
     <template #content>
-      <CoreCard
-        kind="primary"
-        orientation="vertical"
-        props-class="rounded-lg bg-white elevation-5"
-      >
+      <CoreCard kind="primary" props-class="rounded-lg bg-white elevation-5">
         <template #cover>
           <v-img
             :width="400"
-            aspect-ratio="1/1"
             cover
             :lazy-src="state.card.drinkImg"
             :src="state.card.drinkImg"
@@ -92,6 +88,10 @@
 </template>
 <script setup lang="ts">
 import { reactive, onMounted } from "vue";
+
+useHead({
+  title: "Home",
+});
 
 interface FeedbackMsg {
   kind: "success" | "warning" | "error";
@@ -127,6 +127,7 @@ const state = reactive({
   dialog: false as boolean,
   categories: [] as Category[],
   selectedCategory: "" as string,
+  resetSelectComponent: 0 as number,
   headers: [] as Header[],
   drinks: [] as Drink[],
   drinksByCategory: {} as Record<string, never>,
@@ -202,8 +203,6 @@ function getAllDrinks() {
       });
       state.drinks.push(
         ...response.data.value?.drinks.map((item: Drink) => {
-          console.log(item);
-
           return {
             ...item,
             drinkCategory: category.strCategory,
@@ -215,7 +214,6 @@ function getAllDrinks() {
       sortDrinksByName(state.drinks as Array<Drink>);
     }
   });
-  state.selectedCategory = "";
 }
 
 async function getBySelectedDrinkCategory(selectedCategoryName: string) {
@@ -225,7 +223,7 @@ async function getBySelectedDrinkCategory(selectedCategoryName: string) {
 }
 
 function clearSelectedCategory() {
-  state.selectedCategory = "";
+  state.resetSelectComponent++;
   getAllDrinkCategories();
 }
 

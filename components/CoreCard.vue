@@ -9,8 +9,11 @@
       <v-col class="px-0 pb-0" :cols="orientation === 'vertical' ? 12 : 5">
         <slot name="cover" />
       </v-col>
-      <v-col :cols="orientation === 'vertical' || !$slots.cover ? 12 : 7">
-        <div v-if="$slots.content" class="pt-2">
+      <v-col
+        class="d-flex flex-column justify-space-between"
+        :cols="orientation === 'vertical' || !$slots.cover ? 12 : 7"
+      >
+        <div v-if="$slots.content" class="pt-2 my-auto" align-center>
           <slot name="content" />
         </div>
         <v-card-actions v-if="$slots.actions" class="pa-0">
