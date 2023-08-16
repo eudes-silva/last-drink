@@ -8,9 +8,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     directives,
     ssr: false,
     theme: {
-      defaultTheme: "myCustomTheme",
+      defaultTheme: "lastDrinkTheme",
       themes: {
-        myCustomTheme: {
+        lastDrinkTheme: {
           dark: false,
           colors: {
             primary: "#9a8979",
