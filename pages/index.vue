@@ -61,7 +61,7 @@
             cover
             :lazy-src="state.card.drinkImg"
             :src="state.card.drinkImg"
-            lazy-load
+            aspect-ratio="1"
           >
           </v-img>
         </template>
