@@ -18,7 +18,7 @@
       <slot />
     </main>
     <footer class="text-center py-12 bg-grey-lighten-4">
-      <p class="text-grey">LastDrink © 2023</p>
+      <p class="text-grey">LastDrink &copy; {{ new Date().getFullYear() }}</p>
     </footer>
   </div>
 </template>
