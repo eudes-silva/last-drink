@@ -38,6 +38,8 @@
   </v-table>
 </template>
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
+const { mobile } = useDisplay();
 const emit = defineEmits(["getDrinkDetailsByName"]);
 
 const state = reactive({
@@ -76,7 +78,8 @@ function handleHoverRow(drinkItem: Item) {
 }
 function showDetailsIcon(itemRow: Item, itemColumn: string) {
   return (
-    itemRow.idDrink === state.currentHoveredRowId && itemColumn === "strDrink"
+    (itemRow.idDrink === state.currentHoveredRowId || mobile.value) &&
+    itemColumn === "strDrink"
   );
 }
 </script>
