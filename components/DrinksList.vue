@@ -12,13 +12,22 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in items" :key="item.idDrink">
-        <td class="text-no-wrap text-secondary" v-for="header in headers">
-          {{ item[header.value]
-          }}<v-icon
+      <tr
+        v-for="(item, index) in items"
+        :key="item.idDrink"
+        @mouseover="handleHoverRow(item)"
+        :class="!(index % 2) ? 'bg-grey-lighten-4' : 'bg-white'"
+      >
+        <td
+          class="text-no-wrap text-secondary drink-name"
+          v-for="header in headers"
+          :key="header.id"
+        >
+          {{ item[header.value] }}
+          <v-icon
+            v-if="showDetailsIcon(item, header.value)"
             @click="handleClickEmit(item)"
-            class="ml-2 mb-1 details-icon"
-            v-if="header.value === 'strDrink'"
+            class="details-icon ml-2"
             color="tertiary"
             small
             >mdi-eye-outline</v-icon
@@ -30,6 +39,10 @@
 </template>
 <script setup lang="ts">
 const emit = defineEmits(["getDrinkDetailsByName"]);
+
+const state = reactive({
+  currentHoveredRowId: "",
+});
 
 interface Header {
   id: string;
@@ -46,8 +59,8 @@ interface Item {
 
 const props = withDefaults(
   defineProps<{
-    headers?: Array<Header>;
-    items?: Array<Item>;
+    headers?: Header[];
+    items?: Item[];
   }>(),
   {
     headers: () => [],
@@ -55,12 +68,24 @@ const props = withDefaults(
   }
 );
 
-function handleClickEmit(drinkItem: object) {
+function handleClickEmit(drinkItem: Item) {
   emit("getDrinkDetailsByName", drinkItem);
+}
+function handleHoverRow(drinkItem: Item) {
+  state.currentHoveredRowId = drinkItem.idDrink;
+}
+function showDetailsIcon(itemRow: Item, itemColumn: string) {
+  return (
+    itemRow.idDrink === state.currentHoveredRowId && itemColumn === "strDrink"
+  );
 }
 </script>
 <style lang="scss" scoped>
+.drink-name {
+  position: relative;
+}
 .details-icon {
   cursor: pointer;
+  position: absolute;
 }
 </style>
