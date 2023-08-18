@@ -8,7 +8,7 @@
   ></CoreSnackbar>
 
   <v-row
-    class="bg-tertiary d-flex justify-space-between align-center bg-white elevation-5 px-4 pt-2 pb-0 pt-sm-0 mt-12 mx-2 mx-sm-10 rounded-xl"
+    class="bg-tertiary d-flex justify-space-between align-center bg-white elevation-5 px-4 py-2 pb-sm-3 pt-sm-3 mt-12 mx-2 mx-sm-10 rounded-xl"
   >
     <v-col cols="12" sm="4" md="3" lg="2" class="pt-4">
       <CoreSelect
@@ -52,40 +52,42 @@
       @getDrinkDetailsByName="getDrinkDetailsByName"
     />
   </div>
-  <CoreModal :dialog="state.dialog" :key="+state.dialog">
-    <template #content>
-      <CoreCard kind="primary" props-class="rounded-lg bg-white elevation-5">
-        <template #cover>
-          <v-img
-            width="400"
-            height="100%"
-            cover
-            :lazy-src="state.card.drinkImg"
-            :src="state.card.drinkImg"
-            aspect-ratio="1"
-          >
-          </v-img>
-        </template>
-        <template #content>
-          <h3 class="text-center py-3 px-4">{{ state.card.drinkTitle }}</h3>
-          <p class="px-4 pt-0 pb-5 text-center font-weight-light">
-            {{ state.card.drinkDescription }}
-          </p>
-        </template>
-        <template #actions>
-          <CoreBtn
-            prop-class="text-primary bg-grey-lighten-2 text-capitalize
+  <Teleport to="body">
+    <CoreModal :dialog="state.dialog" :key="+state.dialog">
+      <template #content>
+        <CoreCard kind="primary" props-class="rounded-lg bg-white elevation-5">
+          <template #cover>
+            <v-img
+              width="400"
+              height="100%"
+              cover
+              :lazy-src="state.card.drinkImg"
+              :src="state.card.drinkImg"
+              aspect-ratio="1"
+            >
+            </v-img>
+          </template>
+          <template #content>
+            <h3 class="text-center py-3 px-4">{{ state.card.drinkTitle }}</h3>
+            <p class="px-4 pt-0 pb-5 text-center font-weight-light">
+              {{ state.card.drinkDescription }}
+            </p>
+          </template>
+          <template #actions>
+            <CoreBtn
+              prop-class="text-primary bg-grey-lighten-2 text-capitalize
           rounded-0"
-            kind="tertiary"
-            label="Fechar"
-            min-height="60"
-            block
-            @click="state.dialog = false"
-          />
-        </template>
-      </CoreCard>
-    </template>
-  </CoreModal>
+              kind="tertiary"
+              label="Fechar"
+              min-height="60"
+              block
+              @click="state.dialog = false"
+            />
+          </template>
+        </CoreCard>
+      </template>
+    </CoreModal>
+  </Teleport>
 </template>
 <script setup lang="ts">
 import { reactive, onMounted } from "vue";
@@ -240,7 +242,7 @@ async function searchDrinkByName(searchState: {
   searchInput: string;
   isEmpty: boolean;
 }) {
-  const filteredDrinks = state.drinks.filter((drink: any) => {
+  const filteredDrinks = state.drinks.filter((drink: Drink) => {
     return drink.strDrink
       .toLowerCase()
       .includes(searchState.searchInput.toLocaleLowerCase());
@@ -254,7 +256,7 @@ async function searchDrinkByName(searchState: {
   }
 }
 
-async function getDrinkDetailsByName(drinkItem: any) {
+async function getDrinkDetailsByName(drinkItem: Drink) {
   state.dialog = false;
   const response = await useCustomFetch<{
     drinks: Array<{ strInstructions: string }>;
