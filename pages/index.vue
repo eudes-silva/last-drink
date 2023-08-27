@@ -1,96 +1,159 @@
 <template>
-  <CoreSnackbar
-    v-if="Object.keys(state.feedbackMsg).length"
-    :kind="state.feedbackMsg.kind"
-    :snackbarActive="!!state.feedbackMsg.activateMsgComponent"
-    :text="state.feedbackMsg.message"
-    :timeout="5000"
-  ></CoreSnackbar>
-
-  <v-row
-    class="bg-tertiary d-flex justify-space-between align-center bg-white elevation-5 px-4 py-2 pb-sm-3 pt-sm-3 mt-12 mx-2 mx-sm-10 rounded-xl"
-  >
-    <v-col cols="12" sm="4" md="3" lg="2" class="pt-4">
-      <CoreSelect
-        :key="state.resetSelectComponent"
-        density="compact"
-        kind="secondary"
-        item-title="strCategory"
-        item-value="strCategory"
-        prop-class="text-secondary"
-        color="secondary"
-        base-color="secondary"
-        label="Categorias"
-        rounded="lg"
-        :categories="state.categories"
-        @display-by-selected="getBySelectedDrinkCategory"
-        @clear-selected="clearSelectedCategory"
-      />
-    </v-col>
-    <v-col class="py-0 text-right" cols="12" sm="6" md="4" lg="3" xl="2">
-      <CoreSearch
-        density="compact"
-        kind="secondary"
-        item-title="strCategory"
-        item-value="strCategory"
-        prop-class="text-secondary"
-        base-color="secondary"
-        label="Buscar por nome da bebida"
-        rounded="lg"
-        :key="state.selectedCategory"
-        @search-input="searchDrinkByName"
-      ></CoreSearch>
-    </v-col>
-  </v-row>
-  <div
-    v-if="state.drinks.length"
-    class="bg-white my-12 elevation-5 mx-2 mx-sm-10 py-6 px-8 rounded-xl"
-  >
-    <DrinksList
-      :headers="state.headers"
-      :items="state.drinks"
-      @getDrinkDetailsByName="getDrinkDetailsByName"
-    />
-  </div>
-  <Teleport to="body">
-    <CoreModal :dialog="state.dialog" :key="+state.dialog">
-      <template #content>
-        <CoreCard kind="primary" props-class="rounded-lg bg-white elevation-5">
-          <template #cover>
-            <v-img
-              width="400"
-              height="100%"
-              cover
-              :lazy-src="state.card.drinkImg"
-              :src="state.card.drinkImg"
-              aspect-ratio="1"
+  <div class="d-flex flex-column h-100">
+    <header class="elevation-5">
+      <v-row class="bg-primary px-2 px-sm-12 py-4" no-gutters>
+        <v-col>
+          <v-img
+            width="220"
+            min-width="220"
+            cover
+            src="/images/lastdrink-logo.png"
+          >
+          </v-img>
+        </v-col>
+        <v-col align-self="center" class="text-right">
+          <v-btn
+            color="btn"
+            class="text-capitalize"
+            rounded
+            @click="showFavorites()"
+            min-width="131px"
+          >
+            Favoritos
+            <v-badge
+              :content="favorites.length"
+              text-color="white"
+              color="tertiary"
+              floating
             >
-            </v-img>
-          </template>
+              <v-icon size="x-large" class="ml-1 text-secondary"
+                >mdi-heart</v-icon
+              >
+            </v-badge>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </header>
+    <main class="bg-mainbg mt-16 pt-10">
+      <CoreSnackbar
+        v-if="Object.keys(state.feedbackMsg).length"
+        :kind="state.feedbackMsg.kind"
+        :snackbarActive="!!state.feedbackMsg.activateMsgComponent"
+        :text="state.feedbackMsg.message"
+        :timeout="5000"
+      ></CoreSnackbar>
+
+      <v-row
+        class="d-flex justify-space-between align-center bg-white elevation-5 px-4 py-2 pb-sm-3 pt-sm-3 mt-12 mx-4 mx-sm-10 rounded-xl"
+      >
+        <v-col cols="12" sm="4" md="3" lg="2" class="pt-4">
+          <CoreSelect
+            :key="state.resetSelectComponent"
+            density="compact"
+            kind="secondary"
+            item-title="strCategory"
+            item-value="strCategory"
+            prop-class="text-primary"
+            color="primary"
+            base-color="primary"
+            focused
+            label="Categorias"
+            rounded="lg"
+            :categories="state.categories"
+            @display-by-selected="getBySelectedDrinkCategory"
+            @clear-selected="clearSelectedCategory"
+          />
+        </v-col>
+        <v-col class="py-0 text-right" cols="12" sm="6" md="4" lg="3" xl="2">
+          <CoreSearch
+            density="compact"
+            kind="secondary"
+            item-title="strCategory"
+            item-value="strCategory"
+            prop-class="text-primary"
+            base-color="primary"
+            label="Buscar por nome da bebida"
+            rounded="lg"
+            :key="state.selectedCategory"
+            @search-input="searchDrinkByName"
+          ></CoreSearch>
+        </v-col>
+      </v-row>
+      <Transition>
+        <div
+          v-if="state.drinks.length"
+          class="bg-white my-12 elevation-5 mx-4 mx-sm-10 py-6 px-8 rounded-xl"
+        >
+          <DrinksList
+            :headers="state.headers"
+            :items="state.drinks"
+            @getDrinkDetailsByName="getDrinkDetailsByName"
+          />
+        </div>
+      </Transition>
+      <Teleport to="body">
+        <CoreModal :dialog="state.dialog" :key="+state.dialog">
           <template #content>
-            <h3 class="text-center py-3 px-4">{{ state.card.drinkTitle }}</h3>
-            <p class="px-4 pt-0 pb-5 text-center font-weight-light">
-              {{ state.card.drinkDescription }}
-            </p>
-          </template>
-          <template #actions>
-            <CoreBtn
-              prop-class="text-primary bg-grey-lighten-2 text-capitalize
+            <CoreCard
+              kind="primary"
+              props-class="rounded-lg bg-white elevation-5"
+            >
+              <template #cover>
+                <v-img
+                  width="400"
+                  height="100%"
+                  cover
+                  :lazy-src="state.card.drinkImg"
+                  :src="state.card.drinkImg"
+                  aspect-ratio="1"
+                >
+                </v-img>
+              </template>
+              <template #content>
+                <h3 class="text-center py-3 px-4">
+                  {{ state.card.drinkTitle
+                  }}<Transition>
+                    <v-icon color="secondary" class="ml-4 mb-1">{{
+                      favorites.find(
+                        (favorite) => favorite.idDrink === state.card.idDrink
+                      )
+                        ? "mdi-heart"
+                        : "mdi-heart-outline"
+                    }}</v-icon>
+                  </Transition>
+                </h3>
+                <p class="px-4 pt-0 pb-5 text-center font-weight-light">
+                  {{ state.card.drinkDescription }}
+                </p>
+              </template>
+              <template #actions>
+                <CoreBtn
+                  prop-class="text-primary bg-grey-lighten-2 text-capitalize
           rounded-0"
-              kind="tertiary"
-              label="Fechar"
-              min-height="60"
-              block
-              @click="state.dialog = false"
-            />
+                  kind="tertiary"
+                  label="Fechar"
+                  min-height="60"
+                  block
+                  @click="state.dialog = false"
+                />
+              </template>
+            </CoreCard>
           </template>
-        </CoreCard>
-      </template>
-    </CoreModal>
-  </Teleport>
+        </CoreModal>
+      </Teleport>
+    </main>
+    <footer class="text-center py-12 bg-grey-lighten-4">
+      <p class="text-primary">
+        LastDrink &copy; {{ new Date().getFullYear() }}
+      </p>
+    </footer>
+  </div>
 </template>
 <script setup lang="ts">
 import { reactive, onMounted } from "vue";
+import { useFavoritesStore } from "@/stores/FavoritesStore";
+const store = useFavoritesStore();
+const favorites = computed(() => store.favorites);
 
 useHead({
   title: "Home",
@@ -103,6 +166,7 @@ interface FeedbackMsg {
 }
 
 interface Card {
+  idDrink: string;
   drinkImg: string;
   drinkTitle: string;
   drinkDescription: string;
@@ -269,6 +333,7 @@ async function getDrinkDetailsByName(drinkItem: Drink) {
   });
   if (!response.error.value && response.data.value) {
     const cardContent: Card = {
+      idDrink: drinkItem.idDrink,
       drinkImg: `${drinkItem.strDrinkThumb}/preview`,
       drinkTitle: drinkItem.strDrink,
       drinkDescription: response.data.value?.drinks[0].strInstructions,
@@ -280,4 +345,32 @@ async function getDrinkDetailsByName(drinkItem: Drink) {
       !!cardContent.drinkDescription;
   }
 }
+function showFavorites() {
+  state.drinks = [...favorites.value] as Array<Drink>;
+  sortDrinksByName(state.drinks as Array<Drink>);
+  state.resetSelectComponent++;
+}
 </script>
+<style lang="scss" scoped>
+header {
+  position: fixed;
+  width: 100%;
+  z-index: 2;
+}
+footer {
+  flex-shrink: 0;
+  width: 100%;
+}
+main {
+  flex-grow: 1;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
