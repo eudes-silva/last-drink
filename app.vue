@@ -1,8 +1,6 @@
 <template>
   <div class="h-screen">
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <NuxtPage />
   </div>
 </template>
 <script setup lang="ts">
