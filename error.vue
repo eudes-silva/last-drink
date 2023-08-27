@@ -1,16 +1,16 @@
 <template>
-  <div class="text-center h-screen error-container">
+  <div class="text-center h-screen error-container bg-mainbg">
     <div>
-      <v-icon size="x-large" color="warning">mdi-alert</v-icon>
+      <v-icon size="x-large" color="secondary">mdi-alert</v-icon>
       <h1>{{ error?.statusCode }}</h1>
       <p>{{ error?.message }}</p>
       <CoreBtn
         rounded="normal"
-        kind="secondary"
-        color="primary"
+        kind="tertiary"
+        color="btn"
         label="Voltar para a página inicial"
         size="small"
-        class="mt-2 text-lowercase"
+        class="mt-2 text-lowercase text-primary"
         @click="handleError"
       ></CoreBtn>
     </div>
