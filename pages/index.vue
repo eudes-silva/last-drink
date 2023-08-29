@@ -12,25 +12,54 @@
           </v-img>
         </v-col>
         <v-col align-self="center" class="text-right">
-          <v-btn
-            color="btn"
-            class="text-capitalize"
-            rounded
-            @click="showFavorites()"
-            min-width="131px"
+          <v-badge
+            class="mr-10"
+            :content="favorites.length"
+            text-color="white"
+            color="secondary"
+            floating
           >
-            Favoritos
-            <v-badge
-              :content="favorites.length"
-              text-color="white"
-              color="tertiary"
-              floating
+            <CoreBtn
+              :label="$t('favorites')"
+              prop-class="text-primary bg-btn text-capitalize"
+              append-icon="mdi-heart"
+              rounded="rounded"
+              @click="showFavorites()"
             >
-              <v-icon size="x-large" class="ml-1 text-secondary"
-                >mdi-heart</v-icon
-              >
-            </v-badge>
-          </v-btn>
+            </CoreBtn>
+          </v-badge>
+          <v-btn-toggle
+            v-model="$i18n.locale"
+            class="bg-transparent"
+            rounded
+            mandatory
+            density="compact"
+          >
+            <CoreBtn
+              kind="tertiary"
+              label="PT-BR"
+              color="primary"
+              prop-class="bg-transparent text-btn text-capitalize"
+              rounded="rounded"
+              value="pt-BR"
+            >
+            </CoreBtn>
+            <v-divider
+              class="mx-2"
+              :thickness="2"
+              color="white"
+              vertical
+            ></v-divider>
+            <CoreBtn
+              kind="tertiary"
+              label="EN"
+              color="primary"
+              prop-class="bg-transparent text-btn text-capitalize"
+              rounded="rounded"
+              value="en-US"
+            >
+            </CoreBtn>
+          </v-btn-toggle>
         </v-col>
       </v-row>
     </header>
@@ -52,14 +81,14 @@
             density="compact"
             kind="secondary"
             item-title="strCategory"
-            item-value="strCategory"
+            item-value="valueCategory"
             prop-class="text-primary"
             color="primary"
             base-color="primary"
             focused
-            label="Categorias"
+            :label="$t('categories')"
             rounded="lg"
-            :categories="state.categories"
+            :categories="categories"
             @display-by-selected="getBySelectedDrinkCategory"
             @clear-selected="clearSelectedCategory"
           />
@@ -72,7 +101,7 @@
             item-value="strCategory"
             prop-class="text-primary"
             base-color="primary"
-            label="Buscar por nome da bebida"
+            :label="$t('search-drink-by-name')"
             rounded="lg"
             :key="state.selectedCategory"
             @search-input="searchDrinkByName"
@@ -151,6 +180,8 @@
 </template>
 <script setup lang="ts">
 import { reactive, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 import { useFavoritesStore } from "@/stores/FavoritesStore";
 const store = useFavoritesStore();
 const favorites = computed(() => store.favorites);
@@ -242,6 +273,15 @@ async function getAllDrinkCategories() {
   }
 }
 
+const categories = computed(() => {
+  return state.categories.map((category) => {
+    return {
+      strCategory: t(`${category.strCategory}`),
+      valueCategory: category.strCategory,
+    };
+  });
+});
+
 function getAllDrinks() {
   state.categories.forEach(async (category: Category) => {
     state.drinks = [];
@@ -257,8 +297,8 @@ function getAllDrinks() {
 
     if (!response.error.value && response.data.value) {
       state.headers = [
-        { id: "1", name: "Nome da bebida", value: "strDrink" },
-        { id: "2", name: "Categoria", value: "drinkCategory" },
+        { id: "1", name: "drink-name", value: "strDrink" },
+        { id: "2", name: "category", value: "drinkCategory" },
       ];
 
       Object.assign(state.drinksByCategory, {

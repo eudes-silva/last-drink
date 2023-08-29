@@ -7,7 +7,7 @@
           v-for="header in headers"
           :key="header.id"
         >
-          {{ header.name }}
+          {{ $t(header.name) }}
         </th>
       </tr>
     </thead>
@@ -23,7 +23,7 @@
           v-for="header in headers"
           :key="header.id"
         >
-          {{ item[header.value] }}
+          {{ $t(item[header.value]) }}
           <Transition>
             <v-icon
               v-if="showDetailsIcon(item, header.value)"

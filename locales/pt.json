@@ -1,0 +1,18 @@
+{
+  "categories": "Categorias",
+  "favorites": "Favoritos",
+  "search-drink-by-name": "Buscar bebida pelo nome",
+  "Ordinary Drink": "Bebida Comum",
+  "Cocktail": "Coquetel",
+  "Shake": "Shake",
+  "Other / Unknown": "Outro / Desconhecido",
+  "Cocoa": "Cacau",
+  "Shot": "Dose",
+  "Coffee / Tea": "Café / Chá",
+  "Homemade Liqueur": "Licor Caseiro",
+  "Punch / Party Drink": "Ponche / Bebida de festa",
+  "Beer": "Cerveja",
+  "Soft Drink": "Refrigerante",
+  "drink-name": "Nome da bebida",
+  "category": "Categoria"
+}

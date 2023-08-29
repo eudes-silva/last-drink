@@ -8,6 +8,7 @@
     :rounded="rounded"
     :prepend-icon="prependIcon"
     :append-icon="appendIcon"
+    :value="value"
   >
     {{ label }}
   </v-btn>
@@ -27,6 +28,7 @@ const props = withDefaults(
     propIcon?: string;
     prependIcon?: string;
     appendIcon?: string;
+    value?: string;
   }>(),
   {
     kind: "primary",
