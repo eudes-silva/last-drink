@@ -11,7 +11,7 @@
           >
           </v-img>
         </v-col>
-        <v-col align-self="center" class="text-right">
+        <v-col class="d-flex text-right align-center justify-end">
           <v-badge
             class="mr-10"
             :content="favorites.length"
@@ -23,7 +23,6 @@
               :label="$t('favorites')"
               prop-class="text-primary bg-btn text-capitalize"
               append-icon="mdi-heart"
-              rounded="rounded"
               @click="showFavorites()"
             >
             </CoreBtn>
@@ -37,6 +36,7 @@
           >
             <CoreBtn
               kind="tertiary"
+              size="x-small"
               label="PT-BR"
               color="primary"
               prop-class="bg-transparent text-btn text-capitalize"
@@ -52,6 +52,7 @@
             ></v-divider>
             <CoreBtn
               kind="tertiary"
+              size="x-small"
               label="EN"
               color="primary"
               prop-class="bg-transparent text-btn text-capitalize"
@@ -113,7 +114,7 @@
           v-if="state.drinks.length"
           class="bg-white my-12 elevation-5 mx-4 mx-sm-10 py-6 px-8 rounded-xl"
         >
-          <DrinksList
+          <DrinksTable
             :headers="state.headers"
             :items="state.drinks"
             @getDrinkDetailsByName="getDrinkDetailsByName"
@@ -184,11 +185,12 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useFavoritesStore } from "@/stores/FavoritesStore";
 const store = useFavoritesStore();
-const favorites = computed(() => store.favorites);
 
 useHead({
   title: "Home",
 });
+
+const favorites = computed(() => store.favorites);
 
 interface FeedbackMsg {
   kind: "success" | "warning" | "error";
@@ -267,7 +269,7 @@ async function getAllDrinkCategories() {
     },
   });
 
-  if (!response.error.value && response.data.value) {
+  if (response.data.value) {
     state.categories = response.data.value.drinks;
     getAllDrinks();
   }
@@ -295,7 +297,7 @@ function getAllDrinks() {
       },
     });
 
-    if (!response.error.value && response.data.value) {
+    if (response.data.value) {
       state.headers = [
         { id: "1", name: "drink-name", value: "strDrink" },
         { id: "2", name: "category", value: "drinkCategory" },
@@ -303,7 +305,7 @@ function getAllDrinks() {
 
       Object.assign(state.drinksByCategory, {
         [category.strCategory]: [
-          ...response.data.value.drinks?.map((item) => {
+          ...response.data.value.drinks.map((item) => {
             return { ...item, drinkCategory: category.strCategory };
           }),
         ],
@@ -371,18 +373,16 @@ async function getDrinkDetailsByName(drinkItem: Drink) {
       handleResponseError(response);
     },
   });
-  if (!response.error.value && response.data.value) {
+
+  if (response.data.value) {
     const cardContent: Card = {
       idDrink: drinkItem.idDrink,
       drinkImg: `${drinkItem.strDrinkThumb}/preview`,
       drinkTitle: drinkItem.strDrink,
-      drinkDescription: response.data.value?.drinks[0].strInstructions,
+      drinkDescription: response.data.value.drinks[0].strInstructions,
     };
     state.card = cardContent;
-    state.dialog =
-      !!cardContent.drinkImg ||
-      !!cardContent.drinkTitle ||
-      !!cardContent.drinkDescription;
+    state.dialog = true;
   }
 }
 function showFavorites() {
