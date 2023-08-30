@@ -23,33 +23,35 @@
           v-for="header in headers"
           :key="header.id"
         >
-          {{ $t(item[header.value]) }}
-          <Transition>
-            <v-icon
-              v-if="showDetailsIcon(item, header.value)"
-              @click="store.toggleFavorite(item)"
-              class="favorite-icon ml-2"
-              color="secondary"
-              small
-              >{{
-                store.favorites.some(
-                  (favorite) => favorite.idDrink === item.idDrink
-                )
-                  ? "mdi-heart"
-                  : "mdi-heart-outline"
-              }}</v-icon
-            >
-          </Transition>
-          <Transition>
-            <v-icon
-              v-if="showDetailsIcon(item, header.value)"
-              @click="handleClickEmit(item)"
-              class="details-icon ml-9"
-              color="tertiary"
-              size="30px"
-              >mdi-eye-outline</v-icon
-            >
-          </Transition>
+          {{
+            header.id === "1" ? item[header.value] : $t(`${item[header.value]}`)
+          }}
+          <v-icon
+            @click="store.toggleFavorite(item)"
+            class="ml-2"
+            :class="
+              showRowIcons(item, header.value) ? 'icon-visible' : 'icon-hidden'
+            "
+            color="secondary"
+            small
+            >{{
+              store.favorites.some(
+                (favorite) => favorite.idDrink === item.idDrink
+              )
+                ? "mdi-heart"
+                : "mdi-heart-outline"
+            }}</v-icon
+          >
+          <v-icon
+            @click="handleClickEmit(item)"
+            class="ml-1"
+            :class="
+              showRowIcons(item, header.value) ? 'icon-visible' : 'icon-hidden'
+            "
+            color="tertiary"
+            size="30px"
+            >mdi-eye-outline</v-icon
+          >
         </td>
       </tr>
     </tbody>
@@ -96,7 +98,7 @@ function handleClickEmit(drinkItem: Item) {
 function handleHoverRow(drinkItem: Item) {
   state.currentHoveredRowId = drinkItem.idDrink;
 }
-function showDetailsIcon(itemRow: Item, itemColumn: string) {
+function showRowIcons(itemRow: Item, itemColumn: string) {
   return (
     (itemRow.idDrink === state.currentHoveredRowId || mobile.value) &&
     itemColumn === "strDrink"
@@ -104,23 +106,12 @@ function showDetailsIcon(itemRow: Item, itemColumn: string) {
 }
 </script>
 <style lang="scss" scoped>
-.drink-name {
-  position: relative;
-}
-.details-icon {
-  transform: translateY(-3px);
-}
-.details-icon,
-.favorite-icon {
-  position: absolute;
-}
-.v-enter-active,
-.v-leave-active {
+.icon-visible {
+  visibility: visible;
   transition: opacity 0.3s ease-in-out;
 }
-
-.v-enter-from,
-.v-leave-to {
+.icon-hidden {
+  visibility: hidden;
   opacity: 0;
 }
 </style>
