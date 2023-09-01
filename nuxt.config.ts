@@ -18,16 +18,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
-  modules: [
-    "@pinia/nuxt",
-    "@pinia-plugin-persistedstate/nuxt",
-    "nuxt-delay-hydration",
-  ],
-  delayHydration: {
-    mode: "mount",
-    // enables nuxt-delay-hydration in dev mode for testing
-    // debug: process.env.NODE_ENV === "development",
-  },
+  modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt"],
   vite: {
     plugins: [
       VueI18nVitePlugin({
