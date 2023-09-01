@@ -35,29 +35,14 @@
             density="compact"
           >
             <CoreBtn
+              v-for="locale in $i18n.availableLocales"
               kind="tertiary"
               size="x-small"
-              label="PT-BR"
+              :label="locale"
               color="primary"
-              prop-class="bg-transparent text-btn text-capitalize"
-              rounded="rounded"
-              value="pt-BR"
-            >
-            </CoreBtn>
-            <v-divider
-              class="mx-2"
-              :thickness="2"
-              color="white"
-              vertical
-            ></v-divider>
-            <CoreBtn
-              kind="tertiary"
-              size="x-small"
-              label="EN"
-              color="primary"
-              prop-class="bg-transparent text-btn text-capitalize"
-              rounded="rounded"
-              value="en-US"
+              prop-class="bg-transparent text-btn text-uppercase"
+              rounded="rounded-lg"
+              :value="locale"
             >
             </CoreBtn>
           </v-btn-toggle>
