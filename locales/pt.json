@@ -14,5 +14,6 @@
   "Beer": "Cerveja",
   "Soft Drink": "Refrigerante",
   "drink-name": "Nome da bebida",
-  "category": "Categoria"
+  "category": "Categoria",
+  "close": "Fechar"
 }

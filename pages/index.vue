@@ -161,7 +161,7 @@
                   prop-class="text-primary bg-grey-lighten-2 text-capitalize
           rounded-0"
                   kind="tertiary"
-                  label="Fechar"
+                  :label="$t('close')"
                   min-height="60"
                   block
                   @click="state.dialog = false"
@@ -185,6 +185,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 import { useFavoritesStore } from "@/stores/FavoritesStore";
 const store = useFavoritesStore();
+const config = useRuntimeConfig();
 
 useHead({
   title: "Home",
@@ -262,7 +263,7 @@ async function getAllDrinkCategories() {
   const response = await useCustomFetch<{
     drinks: Array<Category>;
     error: object;
-  }>("/api/json/v1/1/list.php?c=list", {
+  }>(`${config.public.apiBase}/list.php?c=list`, {
     method: "GET",
     onResponseError({ response }) {
       handleResponseError(response);
@@ -290,7 +291,7 @@ function getAllDrinks() {
     const response = await useCustomFetch<{
       drinks: Array<Drink>;
       error: object;
-    }>(`/api/json/v1/1/filter.php?c=${category.strCategory}`, {
+    }>(`${config.public.apiBase}/filter.php?c=${category.strCategory}`, {
       method: "GET",
       onResponseError({ response }) {
         handleResponseError(response);
@@ -367,7 +368,7 @@ async function getDrinkDetailsByName(drinkItem: Drink) {
   const response = await useCustomFetch<{
     drinks: Array<{ strInstructions: string }>;
     error: object;
-  }>(`/api/json/v1/1/lookup.php?i=${drinkItem.idDrink}`, {
+  }>(`${config.public.apiBase}/lookup.php?i=${drinkItem.idDrink}`, {
     method: "GET",
     onResponseError({ response }) {
       handleResponseError(response);
