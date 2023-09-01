@@ -13,6 +13,7 @@
     "@nuxt/devtools": "latest",
     "@types/node": "^18.17.0",
     "nuxt": "^3.6.5",
+    "nuxt-delay-hydration": "^1.2.1",
     "vitest": "^0.33.0"
   },
   "dependencies": {
