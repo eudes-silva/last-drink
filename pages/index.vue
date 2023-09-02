@@ -4,6 +4,7 @@
       <v-row class="bg-primary px-2 px-sm-12 py-4" no-gutters>
         <v-col>
           <v-img
+            :class="{ 'mx-auto': smAndDown }"
             width="220"
             min-width="220"
             cover
@@ -11,7 +12,10 @@
           >
           </v-img>
         </v-col>
-        <v-col class="d-flex text-right align-center justify-end">
+        <v-col
+          class="d-flex align-center"
+          :class="smAndDown ? 'justify-space-between px-5 mt-4' : 'justify-end'"
+        >
           <v-badge
             class="mr-10"
             :content="favorites.length"
@@ -49,7 +53,7 @@
         </v-col>
       </v-row>
     </header>
-    <main class="bg-mainbg mt-16 pt-10">
+    <main class="bg-mainbg mt-16" :class="smAndDown ? 'pt-16' : 'pt-10'">
       <CoreSnackbar
         v-if="Object.keys(state.feedbackMsg).length"
         :kind="state.feedbackMsg.kind"
@@ -171,6 +175,8 @@ const { t } = useI18n();
 import { useFavoritesStore } from "@/stores/FavoritesStore";
 const store = useFavoritesStore();
 const config = useRuntimeConfig();
+import { useDisplay } from "vuetify";
+const { smAndDown } = useDisplay();
 
 useHead({
   title: "Home",

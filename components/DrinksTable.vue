@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th
-          class="text-black text-left"
+          class="text-primary text-left"
           v-for="header in headers"
           :key="header.id"
         >
