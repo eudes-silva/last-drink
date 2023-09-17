@@ -1,13 +1,15 @@
 <template>
   <v-snackbar :color="color" v-model="state.snackbarActive" :timeout="timeout">
-    {{ text }}
-    <template v-slot:actions>
-      <v-btn @click="state.snackbarActive = false"> Fechar </v-btn>
-    </template>
+    <slot>
+      {{ text }}
+      <slot name="actions">
+        <v-btn @click="state.snackbarActive = false"> Fechar </v-btn>
+      </slot>
+    </slot>
   </v-snackbar>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { reactive, computed } from "vue";
 const props = withDefaults(
   defineProps<{
     kind?: "success" | "warning" | "error";
