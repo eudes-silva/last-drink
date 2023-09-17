@@ -1,27 +1,23 @@
 <template>
-  <v-card class="ml-auto elevation-0 rounded-xl" color="white">
-    <v-card-text class="px-0">
-      <v-text-field
-        v-model="state.searchInput"
-        :disabled="disabled"
-        :class="propClass"
-        :rounded="rounded"
-        :base-color="baseColor"
-        :density="density"
-        :variant="variant"
-        :label="label"
-        append-inner-icon="mdi-magnify"
-        single-line
-        hide-details
-        @keyup.enter="handleSearchInput"
-        @click:append-inner="handleSearchInput"
-      ></v-text-field>
-    </v-card-text>
-  </v-card>
+  <v-text-field
+    data-test="search"
+    :disabled="disabled"
+    :class="propClass"
+    :rounded="rounded"
+    :base-color="baseColor"
+    :density="density"
+    :variant="variant"
+    :label="label"
+    single-line
+    hide-details
+    append-inner-icon="mdi-magnify"
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+  >
+  </v-text-field>
 </template>
 <script setup lang="ts">
-import { computed, reactive, watch } from "vue";
-const emit = defineEmits(["searchInput"]);
+import { computed } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -32,6 +28,7 @@ const props = withDefaults(
     density?: "compact" | "comfortable" | "default";
     rounded?: string;
     propClass?: string;
+    modelValue?: string;
   }>(),
   {
     disabled: false,
@@ -39,6 +36,8 @@ const props = withDefaults(
     density: "compact",
   }
 );
+
+defineEmits(["update:modelValue"]);
 
 const variant = computed(
   () =>
@@ -50,22 +49,4 @@ const variant = computed(
       } as const
     )[props.kind])
 );
-
-const state = reactive({
-  searchInput: "",
-  isEmpty: false,
-});
-watch(
-  () => state.searchInput,
-  (value) => {
-    if (value === "") {
-      state.isEmpty = true;
-      handleSearchInput();
-      state.isEmpty = false;
-    }
-  }
-);
-function handleSearchInput() {
-  emit("searchInput", state);
-}
 </script>
