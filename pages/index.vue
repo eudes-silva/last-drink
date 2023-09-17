@@ -55,9 +55,9 @@
     </header>
     <main class="bg-mainbg mt-16" :class="smAndDown ? 'pt-16' : 'pt-10'">
       <v-row
-        class="d-flex justify-space-between align-center bg-white elevation-5 px-4 py-2 pb-sm-3 pt-sm-3 mt-12 mx-4 mx-sm-10 rounded-xl"
+        class="d-flex justify-space-between align-center bg-white elevation-5 mt-16 mt-sm-10 px-4 py-6 mx-4 mx-sm-10 rounded-xl"
       >
-        <v-col cols="12" sm="4" md="3" lg="2" class="pt-4">
+        <v-col cols="12" sm="4" md="3" lg="2" class="py-0 mb-5 mb-sm-0">
           <CoreSelect
             :key="state.resetSelectComponent"
             density="compact"
