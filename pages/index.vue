@@ -54,14 +54,6 @@
       </v-row>
     </header>
     <main class="bg-mainbg mt-16" :class="smAndDown ? 'pt-16' : 'pt-10'">
-      <CoreSnackbar
-        v-if="Object.keys(state.feedbackMsg).length"
-        :kind="state.feedbackMsg.kind"
-        :snackbarActive="!!state.feedbackMsg.activateMsgComponent"
-        :text="state.feedbackMsg.message"
-        :timeout="5000"
-      ></CoreSnackbar>
-
       <v-row
         class="d-flex justify-space-between align-center bg-white elevation-5 px-4 py-2 pb-sm-3 pt-sm-3 mt-12 mx-4 mx-sm-10 rounded-xl"
       >
@@ -85,17 +77,17 @@
         </v-col>
         <v-col class="py-0 text-right" cols="12" sm="6" md="4" lg="3" xl="2">
           <CoreSearch
+            v-model="searchedDrinkNameInput"
             density="compact"
             kind="secondary"
-            item-title="strCategory"
-            item-value="strCategory"
             prop-class="text-primary"
             base-color="primary"
             :label="$t('search-drink-by-name')"
             rounded="lg"
             :key="state.selectedCategory"
-            @search-input="searchDrinkByName"
-          ></CoreSearch>
+            @update:modelValue="searchDrinkByName"
+          >
+          </CoreSearch>
         </v-col>
       </v-row>
       <Transition>
@@ -104,6 +96,7 @@
           class="bg-white my-12 elevation-5 mx-4 mx-sm-10 py-6 px-8 rounded-xl"
         >
           <DrinksTable
+            ref="drinksTable"
             :headers="state.headers"
             :items="state.drinks"
             @getDrinkDetailsByName="getDrinkDetailsByName"
@@ -166,13 +159,20 @@
         LastDrink &copy; {{ new Date().getFullYear() }}
       </p>
     </footer>
+    <CoreSnackbar
+      v-if="Object.keys(state.feedbackMsg).length"
+      :kind="state.feedbackMsg.kind"
+      :snackbarActive="!!state.feedbackMsg.activateMsgComponent"
+      :text="state.feedbackMsg.message"
+      :timeout="5000"
+    ></CoreSnackbar>
   </div>
 </template>
 <script setup lang="ts">
 import { reactive, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
-import { useFavoritesStore } from "@/stores/FavoritesStore";
+import { useFavoritesStore } from "../stores/FavoritesStore";
 const store = useFavoritesStore();
 const config = useRuntimeConfig();
 import { useDisplay } from "vuetify";
@@ -181,6 +181,8 @@ const { smAndDown } = useDisplay();
 useHead({
   title: "Home",
 });
+
+const searchedDrinkNameInput = ref("");
 
 const favorites = computed(() => store.favorites);
 
@@ -318,12 +320,14 @@ function getAllDrinks() {
 }
 
 async function getBySelectedDrinkCategory(selectedCategoryName: string) {
+  searchedDrinkNameInput.value = "";
   state.selectedCategory = selectedCategoryName;
   state.drinks = [];
   state.drinks = state.drinksByCategory[selectedCategoryName];
 }
 
 function clearSelectedCategory() {
+  searchedDrinkNameInput.value = "";
   state.resetSelectComponent++;
   getAllDrinkCategories();
 }
@@ -336,16 +340,13 @@ function sortDrinksByName(drinks: Array<Drink>) {
   ];
 }
 
-async function searchDrinkByName(searchState: {
-  searchInput: string;
-  isEmpty: boolean;
-}) {
+async function searchDrinkByName() {
   const filteredDrinks = state.drinks.filter((drink: Drink) => {
     return drink.strDrink
       .toLowerCase()
-      .includes(searchState.searchInput.toLocaleLowerCase());
+      .includes(searchedDrinkNameInput.value.toLocaleLowerCase());
   });
-  if (searchState.isEmpty) {
+  if (!searchedDrinkNameInput.value) {
     state.selectedCategory
       ? getBySelectedDrinkCategory(state.selectedCategory)
       : getAllDrinkCategories();
