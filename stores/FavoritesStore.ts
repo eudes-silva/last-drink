@@ -24,12 +24,6 @@ export const useFavoritesStore = defineStore(
     return { favorites, toggleFavorite };
   },
   {
-    persist: {
-      key: "favorites",
-      storage: persistedState.cookiesWithOptions({
-        sameSite: "strict",
-        secure: true,
-      }),
-    },
+    persist: true,
   }
 );
