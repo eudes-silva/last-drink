@@ -1,5 +1,6 @@
 <template>
   <v-select
+    data-test="select"
     clearable
     :density="density"
     @click:clear="handleClearSelected"
