@@ -28,7 +28,7 @@
           }}
           <v-icon
             @click="store.toggleFavorite(item)"
-            class="ml-2"
+            class="ml-2 favorite-icon"
             :class="
               showRowIcons(item, header.value) ? 'icon-visible' : 'icon-hidden'
             "
@@ -43,8 +43,9 @@
             }}</v-icon
           >
           <v-icon
+            data-test="details"
             @click="handleClickEmit(item)"
-            class="ml-1"
+            class="ml-1 details-icon"
             :class="
               showRowIcons(item, header.value) ? 'icon-visible' : 'icon-hidden'
             "
@@ -58,7 +59,8 @@
   </v-table>
 </template>
 <script setup lang="ts">
-import { useFavoritesStore } from "@/stores/FavoritesStore";
+import { reactive } from "vue";
+import { useFavoritesStore } from "../stores/FavoritesStore";
 const store = useFavoritesStore();
 import { useDisplay } from "vuetify";
 const { mobile } = useDisplay();
