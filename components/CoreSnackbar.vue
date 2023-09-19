@@ -9,7 +9,6 @@
   </v-snackbar>
 </template>
 <script setup lang="ts">
-import { reactive, computed } from "vue";
 const props = withDefaults(
   defineProps<{
     kind?: "success" | "warning" | "error";
