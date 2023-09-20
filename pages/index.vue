@@ -380,6 +380,7 @@ async function getDrinkDetailsByName(drinkItem: Drink) {
 function showFavorites() {
   state.drinks = [...favorites.value] as Array<Drink>;
   sortDrinksByName(state.drinks as Array<Drink>);
+  state.selectedCategory = "";
   state.resetSelectComponent++;
 }
 </script>
