@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column h-100">
+  <div class="d-flex flex-column h-screen">
     <header class="elevation-5">
       <v-row class="bg-primary px-2 px-sm-12 py-4" no-gutters>
         <v-col>
@@ -53,7 +53,7 @@
         </v-col>
       </v-row>
     </header>
-    <main class="bg-mainbg mt-16" :class="smAndDown ? 'pt-16' : 'pt-10'">
+    <main class="bg-mainbg py-12 mt-16" :class="smAndDown ? 'pt-16' : 'pt-10'">
       <v-row
         class="d-flex justify-space-between align-center bg-white elevation-5 mt-16 mt-sm-10 px-4 py-6 mx-4 mx-sm-10 rounded-xl"
       >
@@ -93,7 +93,7 @@
       <Transition>
         <div
           v-if="state.drinks.length"
-          class="bg-white my-12 elevation-5 mx-4 mx-sm-10 py-6 px-8 rounded-xl"
+          class="bg-white mt-12 elevation-5 mx-4 mx-sm-10 py-6 px-8 rounded-xl"
         >
           <DrinksTable
             ref="drinksTable"
@@ -387,12 +387,12 @@ function showFavorites() {
 <style lang="scss" scoped>
 header {
   position: fixed;
+  top: 0;
   width: 100%;
   z-index: 2;
 }
 footer {
   flex-shrink: 0;
-  width: 100%;
 }
 main {
   flex-grow: 1;

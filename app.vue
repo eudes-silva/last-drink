@@ -1,7 +1,5 @@
 <template>
-  <div class="h-screen">
-    <NuxtPage />
-  </div>
+  <NuxtPage />
 </template>
 <script setup lang="ts">
 useHead({
@@ -10,3 +8,9 @@ useHead({
   },
 });
 </script>
+<style>
+body,
+#__nuxt {
+  min-height: 100%;
+}
+</style>
