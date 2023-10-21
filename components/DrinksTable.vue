@@ -59,6 +59,7 @@
   </v-table>
 </template>
 <script setup lang="ts">
+import { reactive } from "vue";
 import { useFavoritesStore } from "../stores/FavoritesStore";
 const store = useFavoritesStore();
 import { useDisplay } from "vuetify";
