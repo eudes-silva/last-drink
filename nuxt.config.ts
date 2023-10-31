@@ -18,14 +18,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
-  modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt"],
-  piniaPersistedstate: {
-    cookieOptions: {
-      sameSite: "strict",
-      secure: true,
-    },
-    storage: "cookies",
-  },
+  modules: ["@pinia/nuxt"],
   vite: {
     plugins: [
       VueI18nVitePlugin({
